@@ -1,0 +1,75 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    container_name: "mysql" # 容器名称
+    restart: always
+    ports:
+      - "${MYSQL_HOST_PORT}:3306" # 映射端口
+    volumes:
+      - ${MYSQL_DATA_DIR}:/var/lib/mysql:rw # 挂载文件夹
+      - ${MYSQL_CONF_FILE}:/etc/mysql/conf.d/mysql.cnf:ro # 挂载文件夹
+    environment:
+      - TZ=Asia/Shanghai  # 设置时区
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} # 设置mysqlRoot密码
+  redis:
+    image: redis:${REDIS_VERSION}
+    container_name: "redis"
+    ports:
+      - "${REDIS_HOST_PORT}:6379"
+    volumes:
+      - ${REDIS_DATA_DIR}:/data/:rw
+      - ${REDIS_CONF_FILE}:/etc/redis/redis.conf:ro
+    command: redis-server /etc/redis/redis.conf
+    restart: always
+    environment:  # 配置环境变量
+      - TZ=Asia/Shanghai  # 设置时区
+  #  myes:
+  #    image: elasticsearch
+  #    container_name: "myes"
+  #    restart: always
+  #    expose:
+  #      - "9200"
+  #    ports:
+  #      - "9200:9200"
+  #    volumes:
+  #      - ~/server/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+  #      - ~/server/elasticsearch/data:/usr/share/elasticsearch/data
+  #      - ~/server/elasticsearch/plugins:/usr/share/elasticsearch/plugins
+  #      - ~/server/elasticsearch/logs:/usr/share/elasticsearch/logs
+  #    environment:  # 配置环境变量
+  #      - TZ=Asia/Shanghai  # 设置时区
+  #      - discovery.type=single-node
+  #      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+  php:
+    build: ./docker/php-swoole
+    container_name: "php"
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - ${APP_DIR}:/var/www/html:rw # 挂载项目目录
+      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
+    links:
+      - "mysql"
+      - "redis"
+    #      - "myes"
+    #      - "mymq"
+    environment:  # 配置环境变量
+      - TZ=Asia/Shanghai  # 设置时区
+  nginx:
+    image: nginx:${NGINX_VERSION}
+    container_name: "nginx"
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ${APP_DIR}:/usr/share/nginx/html:rw
+      - ${NGINX_CONF_FILE}:/etc/nginx/nginx.conf/:ro
+      - ${NGINX_CONFD_DIR}:/etc/nginx/conf.d/:rw
+      - ${NGINX_LOG_DIR}:/var/log/nginx/:rw
+    environment:  # 配置环境变量
+      - TZ=Asia/Shanghai  # 设置时区
+    links:
+      - "php"
