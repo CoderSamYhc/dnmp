@@ -24,23 +24,23 @@ services:
     restart: always
     environment:  # 配置环境变量
       - TZ=Asia/Shanghai  # 设置时区
-  #  myes:
-  #    image: elasticsearch
-  #    container_name: "myes"
-  #    restart: always
-  #    expose:
-  #      - "9200"
-  #    ports:
-  #      - "9200:9200"
-  #    volumes:
-  #      - ~/server/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-  #      - ~/server/elasticsearch/data:/usr/share/elasticsearch/data
-  #      - ~/server/elasticsearch/plugins:/usr/share/elasticsearch/plugins
-  #      - ~/server/elasticsearch/logs:/usr/share/elasticsearch/logs
-  #    environment:  # 配置环境变量
-  #      - TZ=Asia/Shanghai  # 设置时区
-  #      - discovery.type=single-node
-  #      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+  es:
+    image: elasticsearch:${ES_VERSION}
+    container_name: "es"
+    restart: always
+    expose:
+      - "9200"
+    ports:
+      - "${ES_HOST_PORT}:9200"
+    volumes:
+      - ${ES_CONF_FILE}:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ${ES_DATA_DIR}:/usr/share/elasticsearch/data/:rw
+      - ${ES_PLUGINS_DIR}:/usr/share/elasticsearch/plugins/:rw
+      - ${ES_LOG_DIR}:/usr/share/elasticsearch/logs/:rw
+    environment:  # 配置环境变量
+      - TZ=Asia/Shanghai  # 设置时区
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
   php:
     build: ./docker/php-swoole
     container_name: "php"
