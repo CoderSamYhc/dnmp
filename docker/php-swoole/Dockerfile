@@ -19,7 +19,7 @@ RUN apk add --no-cache curl wget vim gcc g++ autoconf make \
 RUN echo "Asia/Shanghai" > /etc/timezone
 
 # Extensions
-RUN docker-php-ext-install gd bcmath opcache mysqli pdo pdo_mysql sockets zip
+RUN docker-php-ext-install gd bcmath opcache mysqli pdo pdo_mysql sockets zip pcntl
 
 
 RUN echo "Asia/Shanghai" > /etc/timezone
