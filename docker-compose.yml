@@ -24,26 +24,26 @@ services:
     restart: always
     environment:  # 配置环境变量
       - TZ=Asia/Shanghai  # 设置时区
-  es:
-    image: elasticsearch:${ES_VERSION}
-    container_name: "es"
-    restart: always
-    expose:
-      - "9200"
-    ports:
-      - "${ES_HOST_PORT}:9200"
-    volumes:
-      - ${ES_CONF_FILE}:/usr/share/elasticsearch/config/elasticsearch.yml:ro
-      - ${ES_DATA_DIR}:/usr/share/elasticsearch/data/:rw
-      - ${ES_PLUGINS_DIR}:/usr/share/elasticsearch/plugins/:rw
-      - ${ES_LOG_DIR}:/usr/share/elasticsearch/logs/:rw
-    environment:  # 配置环境变量
-      - TZ=Asia/Shanghai  # 设置时区
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms256m -Xmx256m
-  php:
-    build: ./docker/php-swoole
-    container_name: "php-swoole"
+  # es:
+  #   image: elasticsearch:${ES_VERSION}
+  #   container_name: "es"
+  #   restart: always
+  #   expose:
+  #     - "9200"
+  #   ports:
+  #     - "${ES_HOST_PORT}:9200"
+  #   volumes:
+  #     - ${ES_CONF_FILE}:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+  #     - ${ES_DATA_DIR}:/usr/share/elasticsearch/data/:rw
+  #     - ${ES_PLUGINS_DIR}:/usr/share/elasticsearch/plugins/:rw
+  #     - ${ES_LOG_DIR}:/usr/share/elasticsearch/logs/:rw
+  #   environment:  # 配置环境变量
+  #     - TZ=Asia/Shanghai  # 设置时区
+  #     - discovery.type=single-node
+  #     - ES_JAVA_OPTS=-Xms512m -Xmx512m
+  php-73:
+    build: ./docker/php-73
+    container_name: "php-73"
     restart: always
     working_dir: /var/www
     ports:
@@ -55,8 +55,22 @@ services:
     links:
       - "mysql"
       - "redis"
-      - "es"
-    #      - "mymq"
+    environment:  # 配置环境变量
+      - TZ=Asia/Shanghai  # 设置时区
+  php-74:
+    build: ./docker/php-74
+    container_name: "php-74"
+    restart: always
+    working_dir: /var/www
+    ports:
+      - "9001:9000"
+    volumes:
+      - ${APP_DIR}:/var/www:rw # 挂载项目目录
+      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
+    links:
+      - "mysql"
+      - "redis"
     environment:  # 配置环境变量
       - TZ=Asia/Shanghai  # 设置时区
   nginx:
@@ -73,4 +87,6 @@ services:
     environment:  # 配置环境变量
       - TZ=Asia/Shanghai  # 设置时区
     links:
-      - "php"
+      - "php-73"
+      - "php-74"
+

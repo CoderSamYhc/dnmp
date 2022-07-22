@@ -1,0 +1,2 @@
+path.config: /etc/logstash/conf.d
+xpack.monitoring.elasticsearch.hosts: [ "http://es:9200" ]
