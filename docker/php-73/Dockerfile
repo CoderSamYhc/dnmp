@@ -11,7 +11,7 @@ RUN echo "Asia/Shanghai" > /etc/timezone
 RUN set -ex \
     && apk update \
     && apk add --no-cache libstdc++ wget openssl bash \
-    libmcrypt-dev libzip-dev libpng-dev libc-dev zlib-dev librdkafka-dev libmemcached-dev cyrus-sasl-dev
+    libmcrypt-dev libzip-dev libpng-dev libc-dev zlib-dev librdkafka-dev libmemcached-dev cyrus-sasl-dev git
 
 RUN apk add --no-cache --virtual .build-deps autoconf automake make g++ gcc \
     libtool dpkg-dev dpkg pkgconf file re2c pcre-dev php7-dev php7-pear openssl-dev \
@@ -20,8 +20,8 @@ RUN apk add --no-cache --virtual .build-deps autoconf automake make g++ gcc \
     && docker-php-ext-install gd bcmath opcache mysqli pdo pdo_mysql sockets zip pcntl
 
     # Extension memcached redis bcmath mongodb rdkafka
-RUN pecl install memcached redis mcrypt mongodb rdkafka psr \
-    && docker-php-ext-enable memcached redis mcrypt mongodb rdkafka psr \
+RUN pecl install memcached redis mcrypt mongodb rdkafka \
+    && docker-php-ext-enable memcached redis mcrypt mongodb rdkafka \
 
     # 安装 Composer
     && wget https://mirrors.cloud.tencent.com/composer/composer.phar \
@@ -57,13 +57,13 @@ RUN pecl install memcached redis mcrypt mongodb rdkafka psr \
     && rm -rf xlswriter \
     && docker-php-ext-enable xlswriter \
 
-    # 安装phalcon
-    && curl -fsSL "https://github.com/phalcon/cphalcon/archive/refs/tags/v3.4.5.tar.gz" -o cphalcon-3.4.5.tar.gz \
-    && tar -zxvf cphalcon-3.4.5.tar.gz \
-    && rm cphalcon-3.4.5.tar.gz \
-    && cd cphalcon-3.4.5/build && ./install \
-    && rm -rf cphalcon-3.4.5 \
-    && docker-php-ext-enable phalcon \
+#    # 安装phalcon
+#    && curl -fsSL "https://github.com/phalcon/cphalcon/archive/refs/tags/v3.4.5.tar.gz" -o cphalcon-3.4.5.tar.gz \
+#    && tar -zxvf cphalcon-3.4.5.tar.gz \
+#    && rm cphalcon-3.4.5.tar.gz \
+#    && cd cphalcon-3.4.5/build && ./install \
+#    && rm -rf cphalcon-3.4.5 \
+#    && docker-php-ext-enable phalcon \
 
     # 删除系统扩展
     && apk del .build-deps \

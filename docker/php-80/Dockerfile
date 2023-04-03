@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine
+FROM php:8.0-fpm-alpine
 
 ENV SWOOLE_VERSION=4.5.3
 ENV PHP_REDIS=5.3.1

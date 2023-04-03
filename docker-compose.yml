@@ -12,6 +12,8 @@ services:
     environment:
       - TZ=Asia/Shanghai  # 设置时区
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} # 设置mysqlRoot密码
+    networks:
+      - example_default
   redis:
     image: redis:${REDIS_VERSION}
     container_name: "redis"
@@ -24,6 +26,8 @@ services:
     restart: always
     environment:  # 配置环境变量
       - TZ=Asia/Shanghai  # 设置时区
+    networks:
+      - example_default
   # es:
   #   image: elasticsearch:${ES_VERSION}
   #   container_name: "es"
@@ -41,38 +45,42 @@ services:
   #     - TZ=Asia/Shanghai  # 设置时区
   #     - discovery.type=single-node
   #     - ES_JAVA_OPTS=-Xms512m -Xmx512m
-  php-72:
-    build: ./docker/php-72
-    container_name: "php-72"
-    restart: always
-    working_dir: /var/www
-    ports:
-      - "9001:9000"
-    volumes:
-      - ${APP_DIR}:/var/www:rw # 挂载项目目录
-      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
-      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
-    links:
-      - "mysql"
-      - "redis"
-    environment: # 配置环境变量
-      - TZ=Asia/Shanghai  # 设置时区
-  php-73:
-    build: ./docker/php-73
-    container_name: "php-73"
-    restart: always
-    working_dir: /var/www
-    ports:
-      - "9000:9000"
-    volumes:
-      - ${APP_DIR}:/var/www:rw # 挂载项目目录
-      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
-      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
-    links:
-      - "mysql"
-      - "redis"
-    environment:  # 配置环境变量
-      - TZ=Asia/Shanghai  # 设置时区
+  # php-72:
+  #   build: ./docker/php-72
+  #   container_name: "php-72"
+  #   restart: always
+  #   working_dir: /var/www
+  #   ports:
+  #     - "9001:9000"
+  #   volumes:
+  #     - ${APP_DIR}:/var/www:rw # 挂载项目目录
+  #     - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+  #     - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
+  #   links:
+  #     - "mysql"
+  #     - "redis"
+  #   environment: # 配置环境变量
+  #     - TZ=Asia/Shanghai  # 设置时区
+  #   networks:
+  #     - example_default
+#  php-73:
+#    build: ./docker/php-73
+#    container_name: "php-73"
+#    restart: always
+#    working_dir: /var/www
+#    ports:
+#      - "9000:9000"
+#    volumes:
+#      - ${APP_DIR}:/var/www:rw # 挂载项目目录
+#      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+#      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
+#    links:
+#      - "mysql"
+#      - "redis"
+#    environment:  # 配置环境变量
+#      - TZ=Asia/Shanghai  # 设置时区
+#    networks:
+#      - example_default
   php-74:
     build: ./docker/php-74
     container_name: "php-74"
@@ -83,12 +91,34 @@ services:
     volumes:
       - ${APP_DIR}:/var/www:rw # 挂载项目目录
       - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+      - ${PHP72_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:ro # 挂载配置文件
       - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
     links:
       - "mysql"
       - "redis"
     environment:  # 配置环境变量
       - TZ=Asia/Shanghai  # 设置时区
+    networks:
+      - example_default
+  php-80:
+    build: ./docker/php-80
+    container_name: "php-80"
+    restart: always
+    working_dir: /var/www
+    ports:
+      - "9002:9000"
+    volumes:
+      - ${APP_DIR}:/var/www:rw # 挂载项目目录
+      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+      - ${PHP72_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:ro # 挂载配置文件
+      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
+    links:
+      - "mysql"
+      - "redis"
+    environment: # 配置环境变量
+      - TZ=Asia/Shanghai  # 设置时区
+    networks:
+      - example_default
   nginx:
     image: nginx:${NGINX_VERSION}
     container_name: "nginx"
@@ -102,8 +132,13 @@ services:
       - ${NGINX_LOG_DIR}:/var/log/nginx/:rw
     environment:  # 配置环境变量
       - TZ=Asia/Shanghai  # 设置时区
+    networks:
+      - example_default
     links:
-      - "php-72"
       - "php-73"
       - "php-74"
+
+networks:
+  example_default:
+    external: true
 
