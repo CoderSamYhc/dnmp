@@ -106,7 +106,7 @@ services:
     restart: always
     working_dir: /var/www
     ports:
-      - "9002:9000"
+      - "9000:9000"
     volumes:
       - ${APP_DIR}:/var/www:rw # 挂载项目目录
       - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
@@ -135,7 +135,7 @@ services:
     networks:
       - example_default
     links:
-      - "php-73"
+      - "php-80"
       - "php-74"
 
 networks:
