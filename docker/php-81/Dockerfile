@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.1-fpm-alpine
 
 ENV SWOOLE_VERSION=4.5.3
 ENV PHP_REDIS=5.3.1
@@ -10,17 +10,15 @@ RUN echo "Asia/Shanghai" > /etc/timezone
 # update
 RUN set -ex \
     && apk update \
-    && apk add --no-cache libstdc++ wget openssl bash libmcrypt-dev libzip-dev libpng-dev libc-dev zlib-dev librdkafka-dev libmemcached-dev cyrus-sasl-dev yasm ffmpeg
-
-
+    && apk add --no-cache libstdc++ wget openssl bash \
+    libmcrypt-dev libzip-dev libpng-dev libc-dev zlib-dev librdkafka-dev libmemcached-dev cyrus-sasl-dev yasm ffmpeg
 # --no-cache不使用缓存目录缓存，装完也不保留缓存 --virtual .build-deps 不真实安装
-
 RUN apk add --no-cache --virtual .build-deps autoconf automake make g++ gcc \
-    libtool dpkg-dev dpkg pkgconf file re2c pcre-dev openssl-dev
+    libtool dpkg-dev dpkg pkgconf file re2c pcre-dev openssl-dev \
 
 
     # 安装php常用扩展
-RUN docker-php-ext-install gd bcmath opcache mysqli pdo pdo_mysql zip pcntl \
+    && docker-php-ext-install gd bcmath opcache mysqli pdo pdo_mysql sockets zip pcntl \
 
     # Extension memcached redis bcmath mongodb rdkafka
     && pecl install memcached redis mcrypt mongodb rdkafka xlswriter \
@@ -47,7 +45,7 @@ RUN docker-php-ext-install gd bcmath opcache mysqli pdo pdo_mysql zip pcntl \
 #    && docker-php-ext-enable swoole \
 
     # 安装xlswriter
-#    && curl -fsSL "https://pecl.php.net/get/xlswriter-1.3.4.1.tgz" -o xlswriter.tgz \
+#    && curl -fsSL "https://pecl.php.net/get/xlswriter-1.5.2.tgz" -o xlswriter.tgz \
 #    && mkdir -p xlswriter \
 #    && tar -xf xlswriter.tgz -C xlswriter --strip-components=1 \
 #    && rm xlswriter.tgz \

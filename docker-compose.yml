@@ -7,7 +7,21 @@ services:
     ports:
       - "${MYSQL_HOST_PORT}:3306" # 映射端口
     volumes:
-      - ${MYSQL_DATA_DIR}:/var/lib/mysql:rw # 挂载文件夹
+      - ./data/mysql-57:/var/lib/mysql:rw # 挂载文件夹
+      - ${MYSQL_CONF_FILE}:/etc/mysql/conf.d/mysql.cnf:ro # 挂载文件夹
+    environment:
+      - TZ=Asia/Shanghai  # 设置时区
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} # 设置mysqlRoot密码
+    networks:
+      - example_default
+  mysql-80:
+    image: mysql:8.0
+    container_name: "mysql-80" # 容器名称
+    restart: always
+    ports:
+      - "33061:3306" # 映射端口
+    volumes:
+      - ./data/mysql-80:/var/lib/mysql:rw # 挂载文件夹
       - ${MYSQL_CONF_FILE}:/etc/mysql/conf.d/mysql.cnf:ro # 挂载文件夹
     environment:
       - TZ=Asia/Shanghai  # 设置时区
@@ -119,6 +133,25 @@ services:
       - TZ=Asia/Shanghai  # 设置时区
     networks:
       - example_default
+  php-81:
+    build: ./docker/php-81
+    container_name: "php-81"
+    restart: always
+    working_dir: /var/www
+    ports:
+      - "9003:9000"
+    volumes:
+      - ${APP_DIR}:/var/www:rw # 挂载项目目录
+      - ${PHP80_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+      - ${PHP72_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:ro # 挂载配置文件
+      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
+    links:
+      - "mysql"
+      - "redis"
+    environment: # 配置环境变量
+      - TZ=Asia/Shanghai  # 设置时区
+    networks:
+      - example_default
   php-82:
     build: ./docker/php-82
     container_name: "php-82"
@@ -155,6 +188,7 @@ services:
       - example_default
     links:
       - "php-80"
+      - "php-81"
       - "php-82"
       - "php-74"
 
