@@ -148,6 +148,7 @@ services:
     links:
       - "mysql"
       - "redis"
+      - "clickhouse"
     environment: # 配置环境变量
       - TZ=Asia/Shanghai  # 设置时区
     networks:
@@ -191,7 +192,23 @@ services:
       - "php-81"
       - "php-82"
       - "php-74"
-
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: "clickhouse"
+    restart: always
+    ports:
+      - "9005:9000"
+      - "8123:8123"
+    volumes:
+      - ${CK_CONF_DIR}/docker_related_config.xml:/etc/clickhouse-server/config.d/docker_related_config.xml:rw
+      - ${CK_CONF_DIR}/config.xml:/etc/clickhouse-server/config.xml:rw
+      - ${CK_CONF_DIR}/users.xml:/etc/clickhouse-server/users.xml:rw
+      - ${CK_LOG_DIR}:/var/log/clickhouse-server
+      - ${CK_DATA_DIR}:/var/lib/clickhouse/:rw
+    environment: # 配置环境变量
+      - TZ=Asia/Shanghai  # 设置时区
+    networks:
+      - example_default
 networks:
   example_default:
     external: true
