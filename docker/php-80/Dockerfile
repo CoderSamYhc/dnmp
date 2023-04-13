@@ -14,7 +14,7 @@ RUN set -ex \
     libmcrypt-dev libzip-dev libpng-dev libc-dev zlib-dev librdkafka-dev libmemcached-dev cyrus-sasl-dev yasm ffmpeg
 # --no-cache不使用缓存目录缓存，装完也不保留缓存 --virtual .build-deps 不真实安装
 RUN apk add --no-cache --virtual .build-deps autoconf automake make g++ gcc \
-    libtool dpkg-dev dpkg pkgconf file re2c pcre-dev php7-dev php7-pear openssl-dev \
+    libtool dpkg-dev dpkg pkgconf file re2c pcre-dev openssl-dev \
 
 
     # 安装php常用扩展

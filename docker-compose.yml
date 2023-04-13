@@ -114,25 +114,25 @@ services:
       - TZ=Asia/Shanghai  # 设置时区
     networks:
       - example_default
-  php-80:
-    build: ./docker/php-80
-    container_name: "php-80"
-    restart: always
-    working_dir: /var/www
-    ports:
-      - "9000:9000"
-    volumes:
-      - ${APP_DIR}:/var/www:rw # 挂载项目目录
-      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
-      - ${PHP72_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:ro # 挂载配置文件
-      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
-    links:
-      - "mysql"
-      - "redis"
-    environment: # 配置环境变量
-      - TZ=Asia/Shanghai  # 设置时区
-    networks:
-      - example_default
+#  php-80:
+#    build: ./docker/php-80
+#    container_name: "php-80"
+#    restart: always
+#    working_dir: /var/www
+#    ports:
+#      - "9000:9000"
+#    volumes:
+#      - ${APP_DIR}:/var/www:rw # 挂载项目目录
+#      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+#      - ${PHP72_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:ro # 挂载配置文件
+#      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
+#    links:
+#      - "mysql"
+#      - "redis"
+#    environment: # 配置环境变量
+#      - TZ=Asia/Shanghai  # 设置时区
+#    networks:
+#      - example_default
   php-81:
     build: ./docker/php-81
     container_name: "php-81"
@@ -153,25 +153,25 @@ services:
       - TZ=Asia/Shanghai  # 设置时区
     networks:
       - example_default
-  php-82:
-    build: ./docker/php-82
-    container_name: "php-82"
-    restart: always
-    working_dir: /var/www
-    ports:
-      - "9001:9000"
-    volumes:
-      - ${APP_DIR}:/var/www:rw # 挂载项目目录
-      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
-      - ${PHP72_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:ro # 挂载配置文件
-      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
-    links:
-      - "mysql"
-      - "redis"
-    environment: # 配置环境变量
-      - TZ=Asia/Shanghai  # 设置时区
-    networks:
-      - example_default
+#  php-82:
+#    build: ./docker/php-82
+#    container_name: "php-82"
+#    restart: always
+#    working_dir: /var/www
+#    ports:
+#      - "9001:9000"
+#    volumes:
+#      - ${APP_DIR}:/var/www:rw # 挂载项目目录
+#      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+#      - ${PHP72_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:ro # 挂载配置文件
+#      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
+#    links:
+#      - "mysql"
+#      - "redis"
+#    environment: # 配置环境变量
+#      - TZ=Asia/Shanghai  # 设置时区
+#    networks:
+#      - example_default
   nginx:
     image: nginx:${NGINX_VERSION}
     container_name: "nginx"
@@ -188,9 +188,7 @@ services:
     networks:
       - example_default
     links:
-      - "php-80"
       - "php-81"
-      - "php-82"
       - "php-74"
   clickhouse:
     image: clickhouse/clickhouse-server
