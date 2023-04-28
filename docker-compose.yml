@@ -77,24 +77,26 @@ services:
   #     - TZ=Asia/Shanghai  # 设置时区
   #   networks:
   #     - example_default
-#  php-73:
-#    build: ./docker/php-73
-#    container_name: "php-73"
-#    restart: always
-#    working_dir: /var/www
-#    ports:
-#      - "9000:9000"
-#    volumes:
-#      - ${APP_DIR}:/var/www:rw # 挂载项目目录
-#      - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
-#      - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
-#    links:
-#      - "mysql"
-#      - "redis"
-#    environment:  # 配置环境变量
-#      - TZ=Asia/Shanghai  # 设置时区
-#    networks:
-#      - example_default
+  # php-73:
+  #   build: ./docker/php-73
+  #   container_name: "php-73"
+  #   restart: always
+  #   working_dir: /var/www
+  #   ports:
+  #     - "9000:9000"
+  #   volumes:
+  #     - ${APP_DIR}:/var/www:rw # 挂载项目目录
+  #     - ${PHP72_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro # 挂载配置文件
+  #     - ${PHP72_OPENSSL_FILE}:/usr/local/openssl/cert.pem:ro # 挂载配置文件
+  #   links:
+  #     - "mysql"
+  #     - "redis"
+  #   environment:  # 配置环境变量
+  #     - TZ=Asia/Shanghai  # 设置时区
+  #   extra_hosts: 
+  #     - "www.unionba-goods.test: 172.17.0.1"
+  #   networks:
+  #     - example_default
   php-74:
     build: ./docker/php-74
     container_name: "php-74"
@@ -148,7 +150,7 @@ services:
     links:
       - "mysql"
       - "redis"
-      - "clickhouse"
+      # - "clickhouse"
     environment: # 配置环境变量
       - TZ=Asia/Shanghai  # 设置时区
     networks:
@@ -190,6 +192,8 @@ services:
     links:
       - "php-81"
       - "php-74"
+      # - "php-72"
+      # - "php-73"
   clickhouse:
     image: clickhouse/clickhouse-server
     container_name: "clickhouse"

@@ -21,8 +21,8 @@ RUN apk add --no-cache --virtual .build-deps autoconf automake make g++ gcc \
     && docker-php-ext-install gd bcmath opcache mysqli pdo pdo_mysql sockets zip pcntl \
 
     # Extension memcached redis bcmath mongodb rdkafka
-    && pecl install memcached redis mcrypt mongodb rdkafka \
-    && docker-php-ext-enable memcached redis mcrypt mongodb rdkafka \
+    && pecl install memcached redis mcrypt mongodb rdkafka xlswriter \
+    && docker-php-ext-enable memcached redis mcrypt mongodb rdkafka xlswriter \
 
     # 安装 Composer
     && wget https://mirrors.cloud.tencent.com/composer/composer.phar \
@@ -45,18 +45,18 @@ RUN apk add --no-cache --virtual .build-deps autoconf automake make g++ gcc \
 #    && docker-php-ext-enable swoole \
 
     # 安装xlswriter
-    && curl -fsSL "https://pecl.php.net/get/xlswriter-1.3.4.1.tgz" -o xlswriter.tgz \
-    && mkdir -p xlswriter \
-    && tar -xf xlswriter.tgz -C xlswriter --strip-components=1 \
-    && rm xlswriter.tgz \
-    && ( \
-        cd xlswriter \
-        && phpize \
-        && ./configure --enable-reader \
-        && make && make install \
-    ) \
-    && rm -rf xlswriter \
-    && docker-php-ext-enable xlswriter \
+#    && curl -fsSL "https://pecl.php.net/get/xlswriter-1.3.4.1.tgz" -o xlswriter.tgz \
+#    && mkdir -p xlswriter \
+#    && tar -xf xlswriter.tgz -C xlswriter --strip-components=1 \
+#    && rm xlswriter.tgz \
+#    && ( \
+#        cd xlswriter \
+#        && phpize \
+#        && ./configure --enable-reader \
+#        && make && make install \
+#    ) \
+#    && rm -rf xlswriter \
+#    && docker-php-ext-enable xlswriter \
 
     # 删除系统扩展
     && apk del .build-deps \
